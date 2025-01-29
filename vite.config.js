@@ -11,6 +11,8 @@ export default defineConfig({
       'page': '/src/page',
       'hooks': '/src/hooks',
       'flow': '/src/flows',
+      'certs': '/src/Cert',
+      'titulos': '/src/Titulos'
     },
   },
 })

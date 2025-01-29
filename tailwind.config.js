@@ -10,14 +10,21 @@ export default {
         // Personaliza colores de fondo si es necesario
       },
       backgroundImage: {
-        'custom-gradient': 'linear-gradient(to bottom, #111827, #3D578D)',
+        'custom-gradient': 'linear-gradient(to bottom right, #6a0dad, #000000, #6a0dad)',
+        'custom-gradients': 'linear-gradient(to bottom, #000000, #341847, #592b81)',
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+      },
+      boxShadow: {
+        'lighting-top-left': '0 0 200px rgba(255, 255, 255, 0.2)',
+        'lighting-top-right': '0 0 200px rgba(255, 255, 255, 0.3)',
+        'lighting-bottom-right': '0 0 200px rgba(255, 255, 255, 0.3)',
       },
       colors: {
-        'primary': '#111827',
-        'secondary': '#2C66C3',
-        'tertiary': '#2CB67D',
-        'fourth': '#2C66C3',
-        'fifth': '#1E293B'
+        'primary': '#773078',
+        'secondary': '#402D42',
+        'tertiary': '#3F2759',
+        'fourth': '#',
+        'fifth': '#'
       },
       fontFamily: {
         sans: ['Roboto', 'sans-serif'], // Establece "Roboto" como fuente sans-serif
