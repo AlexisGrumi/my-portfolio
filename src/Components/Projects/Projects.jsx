@@ -13,6 +13,7 @@ import NodeJs from 'assets/Icon/NodeJs.svg'
 import MongoDB from 'assets/Icon/MongoDb.svg'
 import Firebase from 'assets/Icon/Firebase.svg'
 import GCP from 'assets/Icon/GCP.svg'
+import AWS from 'assets/Icon/AWS.svg'
 // Imagenes
 import LandingPage from 'assets/Proyecto_1.png';
 import PaymentsPage from 'assets/Proyecto_2.png';
@@ -49,7 +50,7 @@ const projectsData = [
             { image: ReactJs, title: "ReactJs" },
             { image: TailwindCss, title: "TailwindCss" },
             { image: NodeJs, title: "NodeJs" },
-            { image: MongoDB, title: "MongoDB" }
+            { image: AWS, title: "AWS" }
         ],
         startDate: 'Julio 2021',
         endDate: 'Presente',

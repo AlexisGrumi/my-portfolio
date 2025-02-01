@@ -1,66 +1,64 @@
-
 import { storage } from '../config/firebase.mjs';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import Busboy from 'busboy';
+import { bucket } from '../config/firebaseAdmin.mjs';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-// Subir un archivo a Firebase Storage
-export const uploadFile = (req, res) => {
-  const busboy = Busboy({ headers: req.headers }); // Llama a Busboy como una función
-  const fields = {};  // Para almacenar los campos de texto
-  const fileData = {};  // Para almacenar los datos del archivo
+export const uploadFile = async (req, res) => {
+  try {
+    console.log("req completo: ", req)
+    // if (!req.files || !req.files.file) {
+    //   return res.status(400).json({ error: "No se encontró el archivo" });
+    // }
 
-  // Este evento se ejecuta cuando un campo es recibido en el form-data
-  busboy.on('field', (fieldname, val) => {
-    fields[fieldname] = val;
-  });
+    const file = req.files.file;
+    const { uid, folder } = req.body;
 
-  // Este evento se ejecuta cuando un archivo es recibido
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    const chunks = [];
-    
-    file.on('data', (chunk) => {
-      chunks.push(chunk);  // Agrega los datos del archivo a un array
-    });
-
-    file.on('end', () => {
-      fileData[fieldname] = Buffer.concat(chunks);  // Almacena los datos completos del archivo
-    });
-  });
-
-  // Este evento se ejecuta cuando se completa el procesamiento del formulario
-  busboy.on('finish', async () => {
-    const { uid, folderPath } = fields;  // Extrae los datos del formulario (uid y folderPath)
-    const file = fileData['file'];  // Extrae el archivo del formulario
-
-    if (!file) {
-      return res.status(400).json({ message: "No se proporcionó un archivo" });
+    if (!uid || !folder) {
+      return res.status(400).json({ error: "Faltan datos requeridos (uid, folder)" });
     }
 
-    if (!uid || !folderPath) {
-      return res.status(400).json({ message: "Faltan datos requeridos (uid o folderPath)" });
-    }
+    // Crear la ruta en Firebase Storage
+    const filePath = `${uid}/${folder}/${file.name}`;
+    const fileUpload = bucket.file(filePath);
 
-    const fileRef = ref(storage, `${uid}/${folderPath}/${filename}`);
+    // Subir archivo
+    const stream = fileUpload.createWriteStream({
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
 
-    try {
-      // Subir el archivo a Firebase Storage
-      const snapshot = await uploadBytes(fileRef, file);
-      const fileUrl = await getDownloadURL(snapshot.ref);
+    stream.on("error", (err) => {
+      console.error("Error al subir archivo:", err);
+      return res.status(500).json({ error: "Error al subir archivo" });
+    });
+
+    stream.on("finish", async () => {
+      // Hacer que el archivo sea accesible públicamente
+      await fileUpload.makePublic();
+      const publicUrl = `https://storage.googleapis.com/${storage.name}/${filePath}`;
 
       res.status(200).json({
-        message: 'Archivo subido exitosamente',
-        fileUrl,
+        message: "Archivo subido exitosamente",
+        url: publicUrl,
       });
-    } catch (error) {
-      console.error("Error al subir archivo:", error);
-      res.status(500).json({ message: 'Error al subir el archivo', error: error.message });
-    }
-  });
+    });
 
-  // Le pasa el cuerpo de la solicitud a busboy para procesarlo
-  busboy.end(req.rawBody);
+    stream.end(file.data);
+  } catch (error) {
+    console.error("Error en el servidor:", error);
+    return res.status(500).json({
+      error: error.message,
+      request: {
+        method: req.method,
+        url: req.originalUrl,
+        headers: req.headers,
+        body: req.body,
+        query: req.query,
+        params: req.params
+      }
+    });
+  }
 };
-
 
 // Descargar un archivo desde Firebase Storage
 export const downloadFile = async (req, res) => {

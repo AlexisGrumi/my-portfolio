@@ -19,6 +19,7 @@ import Git from 'assets/Icon/Git.svg';
 import MongoDB from 'assets/Icon/MongoDB.svg';
 import GCP from 'assets/Icon/GCP.svg';
 import Firebase from 'assets/Icon/Firebase.svg';
+import AWS from 'assets/Icon/AWS.svg';
 
 // Certificados
 import { Css, ReactCert, JavaScript, PHP8, Python, Java } from 'certs/CertsExport';
@@ -94,6 +95,11 @@ function Habilities() {
       cert: '',
     },
     {
+      image: AWS,
+      title: 'AWS',
+      cert: '',
+    },
+    {
       image: Firebase,
       title: 'Firebase',
       cert: '',
@@ -130,7 +136,7 @@ function Habilities() {
         {projectsData.map((project, index) => (
           <div
             key={index}
-            className="group m-2 flex flex-row items-center p-2 border border-[#FFFFFF] rounded-lg overflow-hidden relative cursor-pointer"
+            className="group m-2 flex flex-row items-center  p-2 border border-[#FFFFFF] rounded-lg overflow-hidden relative cursor-pointer"
             onClick={() => setSelectedCert(project.cert)}
           >
             {/* Imagen inicial */}
@@ -141,7 +147,7 @@ function Habilities() {
             />
 
             {/* Título del proyecto */}
-            <h2 className="text-sm text-nowrap font-semibold">{project.title}</h2>
+            <h2 className="text-sm text-nowrap font-semibold ">{project.title}</h2>
 
             {/* Contenedor de hover */}
             <div className="absolute inset-0 bg-black text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
